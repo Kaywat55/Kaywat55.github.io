@@ -1,10 +1,79 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>My Website</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Scroll Image Build Effect</title>
+<style>
+  body {
+    margin: 0;
+    background: #000;
+    height: 300vh;
+    font-family: Arial, sans-serif;
+  }
+
+  .container {
+    position: sticky;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: repeat(20, 1fr);
+    grid-template-rows: repeat(20, 1fr);
+    overflow: hidden;
+  }
+
+  .piece {
+    width: 100%;
+    height: 100%;
+    background-image: url('https://pics.craiyon.com/2023-06-09/xyQ29nSq42idZCwYzNToPA.webp');
+    background-size: 2000% 2000%;
+    opacity: 0;
+    transform: scale(0.3) rotate(20deg);
+    transition: opacity 0.4s ease, transform 0.5s ease;
+  }
+
+  .piece.visible {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+</style>
 </head>
 <body>
-  <h1>Welcome to my site!</h1>
-  <p>Made with GitHub Pages.</p>
+
+<div class="container" id="grid"></div>
+
+<script>
+// Build the grid pieces
+const grid = document.getElementById("grid");
+const rows = 20;
+const cols = 20;
+
+for (let r = 0; r < rows; r++) {
+  for (let c = 0; c < cols; c++) {
+    const div = document.createElement("div");
+    div.className = "piece";
+
+    // Each piece shows its correct part of the image
+    div.style.backgroundPosition = `${(c / (cols - 1)) * 100}% ${(r / (rows - 1)) * 100}%`;
+
+    grid.appendChild(div);
+  }
+}
+
+// Reveal pieces as you scroll
+window.addEventListener("scroll", () => {
+  const maxScroll = document.body.scrollHeight - window.innerHeight;
+  const scrollPercent = window.scrollY / maxScroll;
+
+  const pieces = document.querySelectorAll('.piece');
+  const visiblePieces = Math.floor(scrollPercent * pieces.length);
+
+  pieces.forEach((p, i) => {
+    if (i < visiblePieces) p.classList.add('visible');
+  });
+});
+</script>
+
 </body>
 </html>
